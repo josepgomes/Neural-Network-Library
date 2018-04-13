@@ -8,32 +8,41 @@ import java.util.Random;
  */
 public class NeuralNetwork {
     
-    double[][] w1;
-    double[][] w2;
+    double[][][] weights;
     
-    public NeuralNetwork(int inputLayerSize, int outputLayerSize, int hiddenLayerSize){
-        w1 = new double[inputLayerSize][hiddenLayerSize];
-        w2 = new double[hiddenLayerSize][outputLayerSize];
+    public NeuralNetwork(int inputLayerSize, int outputLayerSize, int hiddenLayers, int hiddenLayerSize){
+        weights = new double[hiddenLayers + 1][][];
+        weights[0] = new double[inputLayerSize][hiddenLayerSize];
+        weights[weights.length - 1] = new double[hiddenLayerSize][outputLayerSize];
+        
+        for (int i = 1; i < weights.length - 1; i++) {
+            weights[i] = new double[hiddenLayerSize][hiddenLayerSize];;
+        }
         
         Random random = new Random();
         
-        for (int i = 0; i < inputLayerSize; i++) {
-            for (int j = 0; j < hiddenLayerSize; j++) {
-                w1[i][j] = random.nextGaussian();
-            }
-        }
-        
-        for (int i = 0; i < hiddenLayerSize; i++) {
-            for (int j = 0; j < outputLayerSize; j++) {
-                w2[i][j] = random.nextGaussian();
+        for (int i = 0; i < weights.length; i++) {
+            for (int j = 0; j < weights[i].length; j++) {
+                for (int n = 0; n < weights[i][j].length; n++) {
+                    weights[i][j][n] = random.nextGaussian();
+                }
             }
         }
     }
     
+    public void setWeights(double[][][] weights){
+        this.weights = weights;
+    }
+    
     public double[][] forward(double[][] values){
-        double[][] z2 = dot(values, w1);
+        double[][] z2 = dot(values, weights[0]);
         double[][] a2 = sigmoid(z2, false);
-        double[][] z3 = dot(a2, w2);
+        double[][] ax = a2.clone();
+        for (int i = 1; i < weights.length - 1; i++) {
+            double[][] zx = dot(ax, weights[i]);
+            ax = sigmoid(zx, false);
+        }
+        double[][] z3 = dot(ax, weights[weights.length - 1]);
         double[][] result = sigmoid(z3, false);
         return result;
     }
