@@ -12,7 +12,7 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        double[][] values = new double[4][2];
+        /*double[][] values = new double[4][2];
 
         values[0][0] = 1;
         values[0][1] = 1;
@@ -26,8 +26,10 @@ public class Main {
         values[3][0] = 0;
         values[3][1] = 0;
 
-        NeuralNetwork nn = new NeuralNetwork(2, 1, 5, 3);
-        System.out.println(Arrays.deepToString(nn.forward(values)));
+        NeuralNetwork nn = new NeuralNetwork(2, 1, 1, 3, true);
+        System.out.println(Arrays.deepToString(nn.forward(values)));*/
+        
+        Trainer t = new Trainer(100, 2, 1, 1, 3);
 
     }
 

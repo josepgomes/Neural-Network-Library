@@ -7,34 +7,36 @@ import java.util.Random;
  * @author josepgomes
  */
 public class NeuralNetwork {
-    
+
     double[][][] weights;
-    
-    public NeuralNetwork(int inputLayerSize, int outputLayerSize, int hiddenLayers, int hiddenLayerSize){
+
+    public NeuralNetwork(int inputLayerSize, int outputLayerSize, int hiddenLayers, int hiddenLayerSize, boolean randomWeights) {
         weights = new double[hiddenLayers + 1][][];
         weights[0] = new double[inputLayerSize][hiddenLayerSize];
         weights[weights.length - 1] = new double[hiddenLayerSize][outputLayerSize];
-        
+
         for (int i = 1; i < weights.length - 1; i++) {
             weights[i] = new double[hiddenLayerSize][hiddenLayerSize];;
         }
-        
-        Random random = new Random();
-        
-        for (int i = 0; i < weights.length; i++) {
-            for (int j = 0; j < weights[i].length; j++) {
-                for (int n = 0; n < weights[i][j].length; n++) {
-                    weights[i][j][n] = random.nextGaussian();
+
+        if (randomWeights) {
+            Random random = new Random();
+
+            for (int i = 0; i < weights.length; i++) {
+                for (int j = 0; j < weights[i].length; j++) {
+                    for (int n = 0; n < weights[i][j].length; n++) {
+                        weights[i][j][n] = random.nextGaussian();
+                    }
                 }
             }
         }
     }
-    
-    public void setWeights(double[][][] weights){
+
+    public void setWeights(double[][][] weights) {
         this.weights = weights;
     }
-    
-    public double[][] forward(double[][] values){
+
+    public double[][] forward(double[][] values) {
         double[][] z2 = dot(values, weights[0]);
         double[][] a2 = sigmoid(z2, false);
         double[][] ax = a2.clone();
@@ -46,7 +48,7 @@ public class NeuralNetwork {
         double[][] result = sigmoid(z3, false);
         return result;
     }
-    
+
     public double sigmoid(double t) {
         return 1 / (1 + Math.pow(Math.E, (-1 * t)));
     }
@@ -68,7 +70,7 @@ public class NeuralNetwork {
 
         return result;
     }
-    
+
     public double[][] dot(double[][] A, double[][] B) {
         int aRows = A.length;
         int aColumns = A[0].length;
